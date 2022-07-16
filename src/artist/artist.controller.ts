@@ -1,3 +1,4 @@
+import { ArtistService } from './artist.service';
 import {
   Body,
   Controller,
@@ -14,9 +15,11 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Controller('artist')
 export class ArtistController {
+  constructor(private readonly artistService: ArtistService) {}
+
   @Get()
   getaAll() {
-    return 'getaAll';
+    return this.artistService.getdAll();
   }
 
   @Get(':id')
