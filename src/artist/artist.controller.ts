@@ -1,3 +1,4 @@
+import { IArtist } from './artist.interface';
 import { ArtistService } from './artist.service';
 import {
   Body,
@@ -18,21 +19,18 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  getaAll() {
-    return this.artistService.getdAll();
+  async getaAll(): Promise<IArtist[]> {
+    return await this.artistService.getAll();
   }
 
   @Get(':id')
-  getaOne(@Param('id') id: string) {
-    return 'getaOne__' + id;
+  async getaOne(@Param('id') id: string): Promise<IArtist> {
+    return this.artistService.getOne(id);
   }
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto): string {
-    return `
-    name: ${createArtistDto.name} 
-    grammy: ${createArtistDto.grammy}
-    `;
+  create(@Body() createArtistDto: CreateArtistDto): IArtist {
+    return this.artistService.create(createArtistDto);
   }
 
   @Put(':id')
@@ -43,6 +41,6 @@ export class ArtistController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return 'Deleted  ' + id;
+    return this.artistService.delete(id);
   }
 }
