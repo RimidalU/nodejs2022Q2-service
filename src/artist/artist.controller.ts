@@ -19,21 +19,25 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   async getaAll(): Promise<IArtist[]> {
     return await this.artistService.getAll();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   async getaOne(@Param('id') id: string): Promise<IArtist> {
     return await this.artistService.getOne(id);
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createArtistDto: CreateArtistDto): Promise<IArtist> {
     return await this.artistService.create(createArtistDto);
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   async update(
     @Param('id') id: string,
     @Body() updateArtistDto: UpdateArtistDto,
