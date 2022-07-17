@@ -25,22 +25,25 @@ export class ArtistController {
 
   @Get(':id')
   async getaOne(@Param('id') id: string): Promise<IArtist> {
-    return this.artistService.getOne(id);
+    return await this.artistService.getOne(id);
   }
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto): IArtist {
-    return this.artistService.create(createArtistDto);
+  async create(@Body() createArtistDto: CreateArtistDto): Promise<IArtist> {
+    return await this.artistService.create(createArtistDto);
   }
 
   @Put(':id')
-  update(@Param('id') id, @Body() updateArtistDto: UpdateArtistDto): string {
-    return `Updated  ${updateArtistDto.name}` + id;
+  async update(
+    @Param('id') id: string,
+    @Body() updateArtistDto: UpdateArtistDto,
+  ): Promise<IArtist> {
+    return await this.artistService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.artistService.delete(id);
+  async remove(@Param('id') id: string): Promise<void> {
+    return await this.artistService.delete(id);
   }
 }

@@ -1,3 +1,4 @@
+import { UpdateArtistDto } from './dto/update-artist.dto';
 import {
   BadRequestException,
   Injectable,
@@ -49,9 +50,27 @@ export class ArtistService {
     }
 
     const index = this.artists.findIndex((artist) => artist.id === id);
-    const artist = this.artists[index];
+    // const artist = this.artists[index];
     this.artists.splice(index, 1);
 
     //remove artist's traks; remove traks and artists in album !
+  }
+
+  update(id: string, artistDto: UpdateArtistDto): IArtist {
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
+
+    const currentArtist = this.artists.find((artist) => artist.id === id);
+    if (!currentArtist) {
+      throw new NotFoundException();
+    }
+
+    const index = this.artists.findIndex((artist) => artist.id === id);
+    const updatedArtist = (this.artists[index] = {
+      ...currentArtist,
+      ...artistDto,
+    });
+    return updatedArtist;
   }
 }
