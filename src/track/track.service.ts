@@ -32,7 +32,7 @@ export class TrackService {
   }
 
   create(trackDto: CreateTrackDto): ITrack {
-    const newTrack = {
+    const newTrack: ITrack = {
       ...trackDto,
       id: v4(),
     };
