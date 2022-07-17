@@ -1,6 +1,10 @@
+import { TrackService } from './../track/track.service';
+import { FavoritesService } from './../favorites/favorites.service';
 import { IAlbum } from './album.interface';
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,8 +15,13 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumService {
-  private readonly albums: IAlbum[];
-  constructor() {
+  private albums: IAlbum[];
+  constructor(
+    @Inject(forwardRef(() => FavoritesService))
+    private favoritesService: FavoritesService,
+    @Inject(forwardRef(() => TrackService))
+    private trackService: TrackService,
+  ) {
     this.albums = inMemoryDbService.albums;
   }
 
@@ -45,15 +54,15 @@ export class AlbumService {
       throw new BadRequestException();
     }
     const currentAlbum = this.albums.find((album) => album.id === id);
-    if (!currentAlbum) {
-      throw new NotFoundException();
+    if (currentAlbum) {
+      const index = this.albums.findIndex((album) => album.id === id);
+
+      this.albums.splice(index, 1);
+      this.trackService.removeAlbumId(id);
+      this.favoritesService.removeAlbum(id);
+      return;
     }
-
-    const index = this.albums.findIndex((album) => album.id === id);
-    // const album = this.albums[index];
-    this.albums.splice(index, 1);
-
-    //remove albumId in traks!
+    throw new NotFoundException();
   }
 
   update(id: string, albumDto: UpdateAlbumDto): IAlbum {
@@ -72,5 +81,14 @@ export class AlbumService {
       ...albumDto,
     });
     return updatedAlbum;
+  }
+
+  removeArtistId(id: string): void {
+    this.albums = this.albums.map((album) => {
+      if (album.artistId === id) {
+        return { ...album, artistId: null };
+      } else return album;
+    });
+    return;
   }
 }

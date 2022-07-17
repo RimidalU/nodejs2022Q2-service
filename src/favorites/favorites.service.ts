@@ -4,7 +4,6 @@ import {
   forwardRef,
   Inject,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 
 import { v4, validate } from 'uuid';
