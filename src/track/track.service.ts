@@ -1,100 +1,100 @@
-import { FavoritesService } from './../favorites/favorites.service';
-import { UpdateTrackDto } from './dto/update-track.dto';
-import { CreateTrackDto } from './dto/create-track.dto';
-import { ITrack } from './track.interface';
+import { FavoritesService } from './../favorites/favorites.service'
+import { UpdateTrackDto } from './dto/update-track.dto'
+import { CreateTrackDto } from './dto/create-track.dto'
+import { ITrack } from './track.interface'
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
   forwardRef,
   Inject,
-} from '@nestjs/common';
-import { v4, validate } from 'uuid';
-import inMemoryDbService from 'src/in-memory-db/in-memory-db.service';
+} from '@nestjs/common'
+import { v4, validate } from 'uuid'
+import inMemoryDbService from 'src/in-memory-db/in-memory-db.service'
 
 @Injectable()
 export class TrackService {
-  private tracks: ITrack[];
+  private tracks: ITrack[]
   constructor(
     @Inject(forwardRef(() => FavoritesService))
     private readonly favoritesService: FavoritesService,
   ) {
-    this.tracks = inMemoryDbService.tracks;
+    this.tracks = inMemoryDbService.tracks
   }
 
   getOne(id: string): ITrack {
     if (!validate(id)) {
-      throw new BadRequestException();
+      throw new BadRequestException()
     }
-    const currentTrack = this.tracks.find((track) => track.id === id);
+    const currentTrack = this.tracks.find((track) => track.id === id)
     if (!currentTrack) {
-      throw new NotFoundException();
+      throw new NotFoundException()
     }
-    return currentTrack;
+    return currentTrack
   }
 
   getAll(): ITrack[] {
-    return this.tracks;
+    return this.tracks
   }
 
   create(trackDto: CreateTrackDto): ITrack {
     const newTrack: ITrack = {
       ...trackDto,
       id: v4(),
-    };
-    this.tracks.push(newTrack);
-    return newTrack;
+    }
+    this.tracks.push(newTrack)
+    return newTrack
   }
 
   delete(id: string) {
     if (!validate(id)) {
-      throw new BadRequestException();
+      throw new BadRequestException()
     }
 
-    const currentTrack = this.tracks.find((track) => track.id === id);
+    const currentTrack = this.tracks.find((track) => track.id === id)
 
     if (currentTrack) {
-      const index = this.tracks.findIndex((track) => track.id === id);
-      this.tracks.splice(index, 1);
-      this.favoritesService.removeTrack(id);
-      return;
+      const index = this.tracks.findIndex((track) => track.id === id)
+      this.tracks.splice(index, 1)
+      this.favoritesService.removeTrack(id)
+      return
     }
-    throw new NotFoundException();
+    throw new NotFoundException()
   }
 
   update(id: string, trackDto: UpdateTrackDto): ITrack {
     if (!validate(id)) {
-      throw new BadRequestException();
+      throw new BadRequestException()
     }
 
-    const currentTrack = this.tracks.find((track) => track.id === id);
+    const currentTrack = this.tracks.find((track) => track.id === id)
     if (!currentTrack) {
-      throw new NotFoundException();
+      throw new NotFoundException()
     }
 
-    const index = this.tracks.findIndex((track) => track.id === id);
+    const index = this.tracks.findIndex((track) => track.id === id)
     const updatedTrack = (this.tracks[index] = {
       ...currentTrack,
       ...trackDto,
-    });
-    return updatedTrack;
+    })
+    return updatedTrack
   }
 
-  removeArtistId(id: string): void {
+  removeArtistId(id: string): ITrack[] {
     this.tracks = this.tracks.map((track) => {
       if (track.artistId === id) {
-        return { ...track, artistId: null };
-      } else return track;
-    });
-    return;
+        return { ...track, artistId: null }
+      } else return track
+    })
+    return this.tracks;
   }
 
-  removeAlbumId(id: string): void {
+  removeAlbumId(id: string): ITrack[] {
     this.tracks = this.tracks.map((track) => {
       if (track.albumId === id) {
-        return { ...track, artistId: null };
+        return { ...track, albumId: null };
       } else return track;
     });
-    return;
+    return this.tracks;
   }
 }
