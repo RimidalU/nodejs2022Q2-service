@@ -4,6 +4,7 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 
 import { v4, validate } from 'uuid';
@@ -33,6 +34,13 @@ export class FavoritesService {
   }
 
   async addArtist(id: string): Promise<void> {
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
+    const currentArtist = await inMemoryDbService.artists.find((artist) => artist.id === id);
+    if (!currentArtist) {
+      throw new UnprocessableEntityException();
+    }
     await this.favoritesDB.artists.push(id);
     return;
   }
@@ -46,6 +54,14 @@ export class FavoritesService {
   }
 
   async addTrack(id: string): Promise<void> {
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
+    const currentTrack = await inMemoryDbService.tracks.find((track) => track.id === id);
+    if (!currentTrack) {
+      throw new UnprocessableEntityException();
+    }
+
     await this.favoritesDB.tracks.push(id);
     return;
   }
@@ -59,6 +75,14 @@ export class FavoritesService {
   }
 
   async addAlbum(id: string): Promise<void> {
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
+    const currentAlbum = await inMemoryDbService.albums.find((album) => album.id === id);
+    if (!currentAlbum) {
+      throw new UnprocessableEntityException();
+    }
+
     await this.favoritesDB.albums.push(id);
     return;
   }
