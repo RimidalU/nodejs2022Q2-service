@@ -46,12 +46,12 @@ export class FavoritesService {
   }
 
   async addTrack(id: string): Promise<void> {
-    await this.favoritesDB.artists.push(id);
+    await this.favoritesDB.tracks.push(id);
     return;
   }
 
   async removeTrack(id: string) {
-    const index = await this.favoritesDB.artists.findIndex(
+    const index = await this.favoritesDB.tracks.findIndex(
       (track) => track === id,
     );
     await this.favoritesDB.tracks.splice(index, 1);
@@ -59,12 +59,12 @@ export class FavoritesService {
   }
 
   async addAlbum(id: string): Promise<void> {
-    await this.favoritesDB.artists.push(id);
+    await this.favoritesDB.albums.push(id);
     return;
   }
 
   async removeAlbum(id: string) {
-    const index = await this.favoritesDB.artists.findIndex(
+    const index = await this.favoritesDB.albums.findIndex(
       (album) => album === id,
     );
     await this.favoritesDB.albums.splice(index, 1);
