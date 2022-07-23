@@ -63,6 +63,7 @@ export class ArtistService {
       this.trackService.removeArtistId(id);
       this.albumService.removeArtistId(id);
       this.favoritesService.removeArtist(id);
+      return;
     }
     throw new NotFoundException();
   }
