@@ -84,11 +84,8 @@ export class AlbumService {
   }
 
   removeArtistId(id: string): void {
-    this.albums = this.albums.map((album) => {
-      if (album.artistId === id) {
-        return { ...album, artistId: null };
-      } else return album;
-    });
-    return;
-  }
+  this.albums.forEach((album) => {
+    if (album.artistId === id) album.artistId = null
+  })
+}
 }

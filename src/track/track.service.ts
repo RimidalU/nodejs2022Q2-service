@@ -80,21 +80,15 @@ export class TrackService {
     return updatedTrack
   }
 
-  removeArtistId(id: string): ITrack[] {
-    this.tracks = this.tracks.map((track) => {
-      if (track.artistId === id) {
-        return { ...track, artistId: null }
-      } else return track
+  removeArtistId(id: string): void {
+    this.tracks.forEach((track) => {
+      if (track.artistId === id) track.artistId = null
     })
-    return this.tracks;
   }
 
-  removeAlbumId(id: string): ITrack[] {
-    this.tracks = this.tracks.map((track) => {
-      if (track.albumId === id) {
-        return { ...track, albumId: null };
-      } else return track;
-    });
-    return this.tracks;
-  }
+  removeAlbumId(id: string): void {
+  this.tracks.forEach((track) => {
+    if (track.albumId === id) track.albumId = null
+  })
+}
 }
