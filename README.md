@@ -8,7 +8,10 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone git@github.com:RimidalU/nodejs2022Q2-service.git
+cd nodejs2022Q2-service
+git checkout dev
+
 ```
 
 ## Installing NPM modules
