@@ -18,3 +18,28 @@ services:
       - ${PORT}:${PORT}
     depends_on:
       - db
+  db:
+    container_name: home_library_service_db
+    build:
+      dockerfile: ./postgress/Dockerfile
+      context: .
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - ${PORT_DB}:${PORT_DB}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+volumes:
+  pgdata:
+  app:
