@@ -1,3 +1,4 @@
+import { UserEntity } from './entities/user.entity'
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IUser } from './user.interface';
@@ -20,19 +21,19 @@ export class UserController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getaAll(): Promise<IUser[]> {
+  async getaAll(): Promise<Omit<UserEntity, 'password' | 'toResponse'>[]>  {
     return await this.userService.getAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async getaOne(@Param('id') id: string): Promise<IUser> {
+  async getaOne(@Param('id') id: string): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
     return await this.userService.getOne(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createUserDto: CreateUserDto): Promise<IUser> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
     return await this.userService.create(createUserDto);
   }
 
@@ -41,7 +42,7 @@ export class UserController {
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdatePasswordDto,
-  ): Promise<IUser> {
+  ): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
     return await this.userService.update(id, updateUserDto);
   }
 
