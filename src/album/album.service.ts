@@ -1,3 +1,4 @@
+import { AlbumEntity } from './entities/album.entity'
 import { TrackService } from './../track/track.service';
 import { FavoritesService } from './../favorites/favorites.service';
 import { IAlbum } from './album.interface';
@@ -8,84 +9,124 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { v4, validate } from 'uuid';
-import inMemoryDbService from 'src/in-memory-db/in-memory-db.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { v4 } from 'uuid';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class AlbumService {
-  private albums: IAlbum[];
+  // private albums: IAlbum[];
   constructor(
+    @InjectRepository(AlbumEntity)
+    private albumRepository: Repository<AlbumEntity>,
     @Inject(forwardRef(() => FavoritesService))
     private favoritesService: FavoritesService,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
   ) {
-    this.albums = inMemoryDbService.albums;
+    // this.albums = inMemoryDbService.albums;
   }
 
-  getOne(id: string): IAlbum {
-    if (!validate(id)) {
-      throw new BadRequestException();
-    }
-    const currentAlbum = this.albums.find((album) => album.id === id);
-    if (!currentAlbum) {
-      throw new NotFoundException();
-    }
-    return currentAlbum;
+  async getOne(id: string): Promise<AlbumEntity> {
+    const album = await this.albumRepository.findOne({ where: { id: id } })
+    if (album) return album
+    throw new NotFoundException(`Album with id = ${id} was not found`)
+
+    // if (!validate(id)) {
+    //   throw new BadRequestException();
+    // }
+    // const currentAlbum = this.albums.find((album) => album.id === id);
+    // if (!currentAlbum) {
+    //   throw new NotFoundException();
+    // }
+    // return currentAlbum;
   }
 
-  getAll(): IAlbum[] {
-    return this.albums;
+  async getAll(): Promise<AlbumEntity[]>  {
+    return this.albumRepository.find();
   }
 
-  create(albumDto: CreateAlbumDto): IAlbum {
-    const newAlbum = {
+  async create(albumDto: CreateAlbumDto): Promise<AlbumEntity>  {
+        const newAlbum = {
       ...albumDto,
       id: v4(),
     };
-    this.albums.push(newAlbum);
-    return newAlbum;
+    const createdwAlbum = await this.albumRepository.create(newAlbum);
+      return await this.albumRepository.save(createdwAlbum);
+
+  //   const newAlbum = {
+  //     ...albumDto,
+  //     id: v4(),
+  //   };
+  //   this.albums.push(newAlbum);
+  //   return newAlbum;
   }
 
-  delete(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException();
+  async  delete(id: string) {
+    const result = await this.albumRepository.delete(id)
+    if (result.affected === 0) {
+      throw new NotFoundException(`Album with id = ${id} was not found`)
     }
-    const currentAlbum = this.albums.find((album) => album.id === id);
-    if (currentAlbum) {
-      const index = this.albums.findIndex((album) => album.id === id);
 
-      this.albums.splice(index, 1);
-      this.trackService.removeAlbumId(id);
-      this.favoritesService.removeAlbum(id);
-      return;
-    }
-    throw new NotFoundException();
+    await this.trackService.removeAlbumId(id);
+    await this.favoritesService.removeAlbum(id);
+    return;
+    // if (!validate(id)) {
+    //   throw new BadRequestException();
+    // }
+    // const currentAlbum = this.albums.find((album) => album.id === id);
+    // if (currentAlbum) {
+    //   const index = this.albums.findIndex((album) => album.id === id);
+
+    //   this.albums.splice(index, 1);
+    //   this.trackService.removeAlbumId(id);
+    //   this.favoritesService.removeAlbum(id);
+    //   return;
+    // }
+    // throw new NotFoundException();
   }
 
-  update(id: string, albumDto: UpdateAlbumDto): IAlbum {
-    if (!validate(id)) {
-      throw new BadRequestException();
-    }
+  async update(id: string, albumDto: UpdateAlbumDto): Promise<AlbumEntity> {
 
-    const currentAlbum = this.albums.find((album) => album.id === id);
-    if (!currentAlbum) {
-      throw new NotFoundException();
+    const currenalbum = await this.albumRepository.findOne({ where: { id } });
+    if (currenalbum) {
+      return await this.albumRepository.save(
+        this.albumRepository.create({
+          ...currenalbum,
+          ...albumDto,
+        }),
+      );
     }
+    throw new NotFoundException(`Album with id = ${id} was not found`);
 
-    const index = this.albums.findIndex((album) => album.id === id);
-    const updatedAlbum = (this.albums[index] = {
-      ...currentAlbum,
-      ...albumDto,
-    });
-    return updatedAlbum;
+    // if (!validate(id)) {
+    //   throw new BadRequestException();
+    // }
+
+    // const currentAlbum = this.albums.find((album) => album.id === id);
+    // if (!currentAlbum) {
+    //   throw new NotFoundException();
+    // }
+
+    // const index = this.albums.findIndex((album) => album.id === id);
+    // const updatedAlbum = (this.albums[index] = {
+    //   ...currentAlbum,
+    //   ...albumDto,
+    // });
+    // return updatedAlbum;
   }
 
-  removeArtistId(id: string): void {
-  this.albums.forEach((album) => {
-    if (album.artistId === id) album.artistId = null
-  })
+  async  removeArtistId(id: string): Promise<void> {
+
+    const albums = await this.getAll();
+    albums.forEach(async (album) => {
+      if (album.artistId === id) await this.update(album.id, { ...album, artistId: null });
+    })
+    return;
+//   this.albums.forEach((album) => {
+//     if (album.artistId === id) album.artistId = null
+//   })
 }
 }
