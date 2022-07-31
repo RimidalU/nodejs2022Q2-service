@@ -1,17 +1,27 @@
-import { Exclude } from 'class-transformer';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-export class User {
+@Entity('user')
+export class UserEntity {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column()
   login: string;
 
-  @Exclude()
+  @Column()
   password: string;
 
+  @Column()
   version: number;
+
+  @Column()
   createdAt: number;
+
+  @Column()
   updatedAt: number;
 
-  constructor(partial: Partial<User>) {
-    Object.assign(this, partial);
+  toResponse() {
+    const { password, ...response } = this;
+    return response;
   }
 }
