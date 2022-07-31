@@ -1,9 +1,10 @@
-import { Album } from 'src/album/entities/album.entity'
-import { Artist } from 'src/artist/entities/artist.entity'
-import { Track } from 'src/track/entities/track.entity'
+import { TrackEntity } from './../../track/entities/track.entity'
+import { AlbumEntity } from './../../album/entities/album.entity'
+import { ArtistEntity } from './../../artist/entities/artist.entity'
+
 
 export class Favorites {
-  artists: Artist[];
-  albums: Album[];
-  tracks: Track[];
+  artists: ArtistEntity[];
+  albums: AlbumEntity[];
+  tracks: TrackEntity[];
 }
