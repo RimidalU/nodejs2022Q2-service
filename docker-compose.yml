@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  api:
+  app:
     container_name: home_library_service
     build:
       dockerfile: Dockerfile
@@ -17,11 +17,11 @@ services:
     ports:
       - ${PORT}:${PORT}
     depends_on:
-      - db
-  db:
+      - postgres
+  postgres:
     container_name: home_library_service_db
     build:
-      dockerfile: ./postgress/Dockerfile
+      dockerfile: ./postgres/Dockerfile
       context: .
     env_file:
       - .env
