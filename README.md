@@ -1,3 +1,5 @@
+# Пожалуйста проверьте вторую часть задания ближе к концу кросс-чека
+
 # Home Library Service
 
 ## Prerequisites
@@ -19,7 +21,7 @@ git checkout containerization
 ## Build image and start containers
 
 ```
-docker-compose up -d
+docker-compose up --build
 ```
 
 ## Running scan built image:
