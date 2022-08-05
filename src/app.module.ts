@@ -8,7 +8,8 @@ import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { UserModule } from './user/user.module';
-import configService from './orm.config';
+import configService from './ormconfig';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import configService from './orm.config';
     TrackModule,
     FavoritesModule,
     UserModule,
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     TypeOrmModule.forRoot(configService)
   ],
   controllers: [AppController],

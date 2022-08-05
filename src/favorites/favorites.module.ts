@@ -1,9 +1,12 @@
-import { AlbumModule } from './../album/album.module';
-import { TrackModule } from './../track/track.module';
-import { ArtistModule } from './../artist/artist.module';
 import { forwardRef, Module } from '@nestjs/common';
 import { FavoritesController } from './favorites.controller';
-import { FavoritesService } from './favorites.service';
+
+import { FavoriteEntity } from './entities/favorites.entity'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { FavoritesService } from './favorites.service'
+import { ArtistModule } from './../artist/artist.module'
+import { TrackModule } from './../track/track.module'
+import { AlbumModule } from './../album/album.module'
 
 @Module({
   providers: [FavoritesService],
@@ -12,6 +15,8 @@ import { FavoritesService } from './favorites.service';
     forwardRef(() => ArtistModule),
     forwardRef(() => TrackModule),
     forwardRef(() => AlbumModule),
+    TypeOrmModule.forFeature([FavoriteEntity])
   ],
+  exports: [FavoritesService],
 })
 export class FavoritesModule {}
