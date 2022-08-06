@@ -22,11 +22,11 @@ export class UserEntity {
   version: number;
 
   @CreateDateColumn()
-  @Transform(({ value }) => +new Date(value))
+  // @Transform(({ value }) => new Date(value))
   createdAt: number;
 
   @CreateDateColumn()
-  @Transform(({ value }) => +new Date(value))
+  // @Transform(({ value }) => new Date(value))
   updatedAt: number;
 
   toResponse() {

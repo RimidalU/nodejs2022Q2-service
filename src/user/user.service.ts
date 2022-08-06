@@ -45,8 +45,8 @@ export class UserService {
     await this.isLoginExists(userDto.login);
 
     const version = 1;
-    const createdAt = +Date.now();
-    const updatedAt = +Date.now();
+    const createdAt = Date.now();
+    const updatedAt = Date.now();
 
     const userOutput = {
       version,
@@ -80,8 +80,8 @@ export class UserService {
       id,
       version: currentUser.version + 1,
       login: currentUser.login,
-      createdAt: +currentUser.createdAt,
-      updatedAt: +Date.now(),
+      createdAt: currentUser.createdAt,
+      updatedAt: Date.now(),
     };
     const udatedUser = { ...userOutput, password: userDto.newPassword };
     return (
