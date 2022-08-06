@@ -12,6 +12,6 @@ export default {
   synchronize: true,
   // autoLoadEntities: true,
   entities: ['dist/**/entities/*.entity{.ts,.js}'],
-  migrations: ['dist/**/migration/*{.ts,.js}'],
+  migrations: ['dist/**/migrations/*{.ts,.js}'],
   // migrationsRun: true,
 } as DataSourceOptions;
