@@ -1,1 +1,1 @@
-FROM node:16.15-alpine
+FROM postgres:14.4-alpine

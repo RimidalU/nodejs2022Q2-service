@@ -3,29 +3,29 @@ services:
   app:
     container_name: home_library_service
     build:
-      dockerfile: Dockerfile
       context: .
-    restart: unless-stopped
+      dockerfile: Dockerfile
+    restart: always
     networks:
       - network
     command: npm run start:dev
     volumes:
-      - app:/usr/app
-      - /usr/app/node_modules
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     env_file:
       - .env
-    ports:
-      - ${PORT}:${PORT}
     depends_on:
       - postgres
+    ports:
+      - ${PORT}:${PORT}
   postgres:
     container_name: home_library_service_db
     build:
-      dockerfile: ./postgres/Dockerfile
-      context: .
+      context: ./postgres
+      dockerfile: ./Dockerfile
     env_file:
       - .env
-    restart: unless-stopped
+    restart: always
     ports:
       - ${PORT_DB}:${PORT_DB}
     environment:
@@ -42,4 +42,3 @@ networks:
     driver: bridge
 volumes:
   pgdata:
-  app:

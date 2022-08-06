@@ -1,7 +1,5 @@
-import { IFavoritesRepsonse, IFavorites } from './favorites.interface';
-import { AlbumService } from './../album/album.service';
-import { TrackService } from './../track/track.service';
-import { ArtistService } from './../artist/artist.service';
+import { FavoriteEntity } from './entities/favorites.entity';
+import { IFavoritesRepsonse } from './favorites.interface';
 import { FavoritesService } from './favorites.service';
 import {
   Controller,
@@ -36,7 +34,7 @@ export class FavoritesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeArtist(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Promise<void> {
+  ): Promise<FavoriteEntity> {
     return await this.favoritesService.removeArtist(id);
   }
 

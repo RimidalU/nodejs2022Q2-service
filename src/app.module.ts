@@ -19,7 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     FavoritesModule,
     UserModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
-    TypeOrmModule.forRoot(configService)
+    TypeOrmModule.forRoot(configService),
   ],
   controllers: [AppController],
   providers: [AppService],

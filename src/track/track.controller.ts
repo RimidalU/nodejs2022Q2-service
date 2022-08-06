@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -26,7 +27,9 @@ export class TrackController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async getaOne(@Param('id') id: string): Promise<ITrack> {
+  async getaOne(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<ITrack> {
     return await this.trackService.getOne(id);
   }
 
@@ -35,11 +38,10 @@ export class TrackController {
   async create(@Body() createTrackDto: CreateTrackDto): Promise<ITrack> {
     return await this.trackService.create(createTrackDto);
   }
-
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<ITrack> {
     return await this.trackService.update(id, updateTrackDto);
@@ -47,7 +49,9 @@ export class TrackController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<void> {
     return await this.trackService.delete(id);
   }
 }

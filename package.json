@@ -19,7 +19,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "scan:app": "docker scan nodejs2022q2-service-containerization_app"
+    "scan:app": "docker scan nodejs2022q2-service_app"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -41,6 +41,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.5.0",
+    "typeorm": "^0.3.7",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

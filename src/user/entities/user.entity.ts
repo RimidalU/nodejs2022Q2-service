@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Transform } from 'class-transformer';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity('user')
 export class UserEntity {
@@ -11,17 +18,26 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @Column()
+  @VersionColumn()
   version: number;
 
-  @Column()
+  @CreateDateColumn()
+  @Transform(({ value }) => +new Date(value))
   createdAt: number;
 
-  @Column()
+  @CreateDateColumn()
+  @Transform(({ value }) => +new Date(value))
   updatedAt: number;
 
   toResponse() {
-    const { password, ...response } = this;
-    return response;
+    const { id, login, version, createdAt, updatedAt } = this;
+
+    return {
+      id,
+      login,
+      version,
+      createdAt,
+      updatedAt,
+    };
   }
 }
