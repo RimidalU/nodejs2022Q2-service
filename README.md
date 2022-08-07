@@ -1,5 +1,7 @@
 # Home Library Service
 
+## Logging & Error Handling
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
