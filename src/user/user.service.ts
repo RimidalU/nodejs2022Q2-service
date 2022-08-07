@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import inMemoryDbService from 'src/in-memory-db/in-memory-db.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -43,16 +44,20 @@ export class UserService {
     const version = 1;
     const createdAt = Number(Date.now());
     const updatedAt = Number(Date.now());
+    const { login, password } = userDto;
+
+    const saltForHash = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, saltForHash);
 
     const userOutput = {
       id: v4(),
       version,
-      login: userDto.login,
+      login: login,
       createdAt,
       updatedAt,
     };
 
-    await this.users.push({ ...userOutput, password: userDto.password });
+    await this.users.push({ ...userOutput, password: hashedPassword });
     return userOutput;
   }
 
@@ -85,15 +90,20 @@ export class UserService {
       throw new ForbiddenException();
     }
 
+    const { login, password } = currentUser;
+
+    const saltForHash = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, saltForHash);
+
     const userOutput = {
       id,
       version: currentUser.version + 1,
-      login: currentUser.login,
+      login: login,
       createdAt: currentUser.createdAt,
       updatedAt: Number(Date.now()),
     };
 
-    this.users[index] = { ...userOutput, password: userDto.newPassword };
+    this.users[index] = { ...userOutput, password: hashedPassword };
 
     return userOutput;
   }
