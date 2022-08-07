@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import * as bcrypt from 'bcrypt'
 
 export class User {
   id: string;
@@ -11,7 +12,11 @@ export class User {
   createdAt: number;
   updatedAt: number;
 
+  @Exclude()
+  public hashedRefreshToken?: string;
+
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }
+
 }

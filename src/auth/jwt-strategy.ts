@@ -8,13 +8,13 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   private readonly users: IUser[]
   constructor() {
     super(
       {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        secretOrKey: process.env.JWT_SECRET_KEY || 'topSecret',
+        secretOrKey: process.env.JWT_SECRET_KEY || 'secret123123',
         ignoreExpiration: false,
       })
     this.users = inMemoryDbService.users
