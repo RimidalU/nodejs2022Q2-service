@@ -10,22 +10,22 @@
 ```
 git clone git@github.com:RimidalU/nodejs2022Q2-service.git
 cd nodejs2022Q2-service
-git checkout containerization
+git checkout authentication
 ```
 ## Rename file
 
 .env.example to .env
 
-## Build image and start containers
+## start app
 
 ```
-docker-compose up -d
+npm  run start:dev
 ```
 
 ## Running scan built image:
 
 ```
-npm run scan:app
+npm run test:auth
 ```
 
 After starting the app on port (4000 as default) you can open
