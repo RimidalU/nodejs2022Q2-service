@@ -18,10 +18,6 @@ export class AuthService {
     this.users = inMemoryDbService.users
   }
 
-  async test() {
-    return `AuthService worked!!!`
-  }
-
   async signUp(createUserDto: CreateUserDto) {
     await this.userService.create(createUserDto)
   }
@@ -32,8 +28,7 @@ export class AuthService {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { login, userId: user.id }
-      const accessToken: string = await this.jwtService.sign(payload)
-      console.log(accessToken);
+      const accessToken: string = await this.jwtService.signAsync(payload)
 
       return { accessToken }
     } else {
