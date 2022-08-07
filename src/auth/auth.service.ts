@@ -2,7 +2,7 @@ import inMemoryDbService from 'src/in-memory-db/in-memory-db.service'
 import { IUser } from './../user/user.interface'
 import { CreateUserDto } from './../user/dto/create-user.dto'
 import { UserService } from './../user/user.service'
-import { Inject, Injectable, forwardRef, UnauthorizedException } from '@nestjs/common'
+import { Inject, Injectable, forwardRef, ForbiddenException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
@@ -31,13 +31,13 @@ export class AuthService {
     const user = await this.users.find(((user) => user.login === login))
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload: JwtPayload = { login }
+      const payload: JwtPayload = { login, userId: user.id }
       const accessToken: string = await this.jwtService.sign(payload)
       console.log(accessToken);
 
       return { accessToken }
     } else {
-      throw new UnauthorizedException('Wrong login or password!')
+      throw new ForbiddenException('Wrong login or password!')
     }
   }
 
